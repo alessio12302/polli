@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Amadori - Pagina di reindirizzo camion polli vivi</title>
+<title>Amadori - Allevamento di Morro D'Oro</title>
 
 <style>
 
@@ -20,51 +20,37 @@ body{
     display:flex;
     justify-content:center;
     align-items:center;
-    text-align:center;
-    color:white;
 }
 
 .container{
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:25px;
-    width:90%;
+    text-align:center;
 }
 
 .logo{
     width:320px;
-    max-width:80%;
+    max-width:90%;
+    margin-bottom:40px;
 }
 
-h1{
-    font-size:2rem;
-    font-weight:600;
-}
-
-.btn{
-    margin-top:15px;
+button{
     background:white;
-    color:#005c3b;
+    color:#28a745;
     border:none;
-    padding:18px 60px;
-    font-size:1.4rem;
+    padding:15px 35px;
+    font-size:22px;
     font-weight:bold;
     border-radius:12px;
     cursor:pointer;
     transition:0.3s;
+    margin:10px;
 }
 
-.btn:hover{
+button:hover{
     transform:scale(1.05);
 }
 
-.message{
-    margin-top:10px;
-    font-size:1.2rem;
-    font-weight:bold;
-    color:white;
-    min-height:30px;
+#menu{
+    display:none;
 }
 
 </style>
@@ -74,148 +60,32 @@ h1{
 
 <div class="container">
 
+    <!-- LOGO -->
     <img src="IMG_0139.PNG" class="logo" alt="Logo Amadori">
 
-    <h1>Allevamento Morro D'Oro</h1>
+    <!-- BOTTONE ACCEDI -->
+    <div id="accesso">
+        <button onclick="mostraMenu()">ACCEDI</button>
+    </div>
 
-    <button class="btn" onclick="redirectPage()">
-        ACCEDI
-    </button>
+    <!-- MENU NASCOSTO -->
+    <div id="menu">
+        <button onclick="window.location.href='manutenzione.html'">
+            Manutenzione
+        </button>
 
-    <div class="message" id="message"></div>
+        <button onclick="window.location.href='mangime.html'">
+            Mangime
+        </button>
+    </div>
 
 </div>
 
 <script>
 
-function redirectPage() {
-
-    const now = new Date();
-
-    // Giorno corrente
-    // 0 = Domenica
-    // 1 = Lunedì
-    // 2 = Martedì
-    // 3 = Mercoledì
-    // 4 = Giovedì
-    // 5 = Venerdì
-    // 6 = Sabato
-
-    const day = now.getDay();
-
-    // Ora corrente
-    const hour = now.getHours();
-
-    let url = null;
-
-    // Reset messaggio
-    document.getElementById("message").innerText = "";
-
-
-
-    /*
-    ====================================
-    CONFIGURAZIONE PROGRAMMI
-    ====================================
-    */
-
-
-
-    // LUNEDÌ
-    if(day === 1){
-
-        if(hour >= 8 && hour < 12){
-            url = "https://google.com";
-        }
-
-        else if(hour >= 14 && hour < 18){
-            url = "https://youtube.com";
-        }
-
-    }
-
-
-
-    // MARTEDÌ
-    else if(day === 2){
-
-        if(hour >= 9 && hour < 17){
-            url = "https://facebook.com";
-        }
-
-    }
-
-
-
-    // MERCOLEDÌ
-    else if(day === 3){
-
-        // Nessun programma
-        url = null;
-
-    }
-
-
-
-    // GIOVEDÌ
-    else if(day === 4){
-
-        if(hour >= 10 && hour < 13){
-            url = "https://instagram.com";
-        }
-
-    }
-
-
-
-    // VENERDÌ
-    else if(day === 5){
-
-        if(hour >= 15 && hour < 20){
-            url = "https://tiktok.com";
-        }
-
-    }
-
-
-
-    // SABATO
-    else if(day === 6){
-
-        if(hour >=17 && hour <23){
-            url = "https://tiktok.com";
-  }
-          }    
-
-
-
-    // DOMENICA
-    else if(day === 0){
-
-        // Nessun programma
-        url = null;
-
-    }
-
-
-
-    /*
-    ====================================
-    AZIONE FINALE
-    ====================================
-    */
-
-    if(url){
-
-        window.location.href = url;
-
-    } else {
-
-        document.getElementById("message").innerText =
-            "Nessun programma di carico";
-
-    }
-
+function mostraMenu(){
+    document.getElementById("accesso").style.display = "none";
+    document.getElementById("menu").style.display = "block";
 }
 
 </script>
