@@ -74,7 +74,7 @@ h1{
 
 <div class="container">
 
-    <img src="logo.png" class="logo" alt="Logo Amadori">
+    <img src="IMG_0139.PNG" class="logo" alt="Logo Amadori">
 
     <h1>Allevamento di Morro D'Oro</h1>
 
