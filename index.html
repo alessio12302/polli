@@ -1,94 +1,287 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Amadori - Allevamento di Morro D'Oro</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Amadori - Cancello</title>
 
-<style>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      background-color: #28a745;
+      font-family: Arial, sans-serif;
+      color: white;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+    }
 
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family: Arial, sans-serif;
-}
+    img.logo {
+      max-width: 300px;
+      height: auto;
+      margin-top: 40px;
+    }
 
-body{
-    background:#28a745;
-    height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-}
+    h2 {
+      margin: 20px 0 10px;
+      font-size: 22px;
+      font-weight: normal;
+    }
 
-.container{
-    text-align:center;
-}
+    .section-title {
+      font-size: 24px;
+      font-weight: bold;
+      margin: 10px 0 30px;
+    }
 
-.logo{
-    width:320px;
-    max-width:90%;
-    margin-bottom:40px;
-}
+    button {
+      padding: 15px 30px;
+      font-size: 18px;
+      background-color: #ffffff;
+      color: #28a745;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 20px;
+    }
 
-button{
-    background:white;
-    color:#28a745;
-    border:none;
-    padding:15px 35px;
-    font-size:22px;
-    font-weight:bold;
-    border-radius:12px;
-    cursor:pointer;
-    transition:0.3s;
-    margin:10px;
-}
+    button:hover {
+      background-color: #e6e6e6;
+    }
 
-button:hover{
-    transform:scale(1.05);
-}
+    #status,
+    #geoError,
+    #boxContainer,
+    #piazzolaContainer {
+      display: none;
+    }
 
-#menu{
-    display:none;
-}
+    #status,
+    #geoError {
+      font-size: 20px;
+      margin-top: 30px;
+    }
 
-</style>
+    .note {
+      margin-top: 40px;
+      font-size: 16px;
+      max-width: 90%;
+    }
+
+    select {
+      margin-top: 25px;
+      padding: 12px;
+      font-size: 18px;
+      border-radius: 8px;
+      border: none;
+      width: 220px;
+      text-align: center;
+    }
+
+    #piazzolaImg {
+      margin-top: 30px;
+      width: 90%;
+      max-width: 600px;
+      border-radius: 12px;
+      border: 4px solid white;
+    }
+  </style>
 </head>
 
 <body>
 
-<div class="container">
+  <!-- Logo -->
+  <img src="IMG_0139.PNG" alt="Logo Amadori" class="logo">
 
-    <!-- LOGO -->
-    <img src="IMG_0139.PNG" class="logo" alt="Logo Amadori">
+  <h2>Allevamento di Morro D Oro</h2>
+  <div class="section-title">Ingresso Camion Vivo Teramo</div>
 
-    <!-- BOTTONE ACCEDI -->
-    <div id="accesso">
-        <button onclick="mostraMenu()">ACCEDI</button>
-    </div>
+  <!-- Bottone -->
+  <button id="openGateBtn" onclick="apriCancello()">
+    Apri Cancello
+  </button>
 
-    <!-- MENU NASCOSTO -->
-    <div id="menu">
-        <button onclick="window.location.href='manutenzione.html'">
-            Manutentori
-        </button>
+  <!-- Stato -->
+  <div id="status">Il cancello si sta aprendo...</div>
 
-        <button onclick="window.location.href='mangime.html'">
-            Camion Mangime
-        </button>
-    </div>
+  <!-- Errore -->
+  <div id="geoError">Uhm, non sei davanti al cancello…</div>
 
-</div>
+  <!-- Menu Box -->
+  <div id="boxContainer">
 
-<script>
+    <h3>Seleziona il Box di Carico</h3>
 
-function mostraMenu(){
-    document.getElementById("accesso").style.display = "none";
-    document.getElementById("menu").style.display = "block";
-}
+    <select id="boxSelect" onchange="mostraPiazzola()">
+      <option value="">-- Seleziona --</option>
 
-</script>
+      <option value="1A">1A</option>
+      <option value="2A">2A</option>
+      <option value="3A">3A</option>
+      <option value="4A">4A</option>
+
+      <option value="1B">1B</option>
+      <option value="2B">2B</option>
+      <option value="3B">3B</option>
+      <option value="4B">4B</option>
+
+      <option value="1C">1C</option>
+      <option value="2C">2C</option>
+      <option value="3C">3C</option>
+      <option value="4C">4C</option>
+    </select>
+
+  </div>
+
+  <!-- Foto Piazzola -->
+  <div id="piazzolaContainer">
+    <img id="piazzolaImg" src="" alt="Piazzola">
+  </div>
+
+  <div class="note">
+    Ricorda di accettare la posizione del dispositivo.<br>
+    Premere il pulsante solo davanti al cancello.<br>
+    NON SOSTARE SULLA PESA,NON SI PESA<br>
+    Se non funziona, contattare il custode.
+  </div>
+
+  <script>
+
+    const button = document.getElementById("openGateBtn");
+    const statusMsg = document.getElementById("status");
+    const geoErrorMsg = document.getElementById("geoError");
+    const boxContainer = document.getElementById("boxContainer");
+
+    const latConsentita = 42.67624;
+    const lonConsentita = 13.92359;
+    const raggioInMetri = 1000;
+
+    function distanza(lat1, lon1, lat2, lon2) {
+
+      const R = 6371e3;
+      const rad = Math.PI / 180;
+
+      const φ1 = lat1 * rad;
+      const φ2 = lat2 * rad;
+
+      const Δφ = (lat2 - lat1) * rad;
+      const Δλ = (lon2 - lon1) * rad;
+
+      const a =
+        Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+        Math.cos(φ1) * Math.cos(φ2) *
+        Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+      return R * c;
+    }
+
+    function apriCancello() {
+
+      button.style.display = "none";
+
+      statusMsg.style.display = "block";
+
+      fetch("https://maker.ifttt.com/trigger/CancelloCamion/with/key/gnYYkYK-CXpD4U-5ROjNSCKbsiN5HJ8k8dVPoQklN4U");
+
+      setTimeout(() => {
+
+        statusMsg.style.display = "none";
+
+        boxContainer.style.display = "block";
+
+      }, 2000);
+    }
+
+    function mostraPiazzola() {
+
+      const box = document.getElementById("boxSelect").value;
+
+      const piazzolaContainer = document.getElementById("piazzolaContainer");
+      const piazzolaImg = document.getElementById("piazzolaImg");
+
+      if(box === "") {
+        piazzolaContainer.style.display = "none";
+        return;
+      }
+
+      /*
+        METTI QUI LE TUE FOTO
+        esempio:
+        1A.jpg
+        2A.jpg
+        ecc...
+      */
+
+      piazzolaImg.src = "piazzole/" + box + ".jpg";
+
+      piazzolaContainer.style.display = "block";
+    }
+
+    function checkAccess(lat, lon) {
+
+      const distanzaUtente = distanza(
+        lat,
+        lon,
+        latConsentita,
+        lonConsentita
+      );
+
+      if (distanzaUtente <= raggioInMetri) {
+
+        button.style.display = "inline-block";
+        geoErrorMsg.style.display = "none";
+
+      } else {
+
+        button.style.display = "none";
+
+        geoErrorMsg.style.display = "block";
+      }
+    }
+
+    if (navigator.geolocation) {
+
+      navigator.geolocation.watchPosition(
+
+        (position) => {
+
+          const lat = position.coords.latitude;
+          const lon = position.coords.longitude;
+
+          checkAccess(lat, lon);
+        },
+
+        () => {
+
+          geoErrorMsg.textContent =
+            "Errore nella geolocalizzazione.";
+
+          geoErrorMsg.style.display = "block";
+        },
+
+        {
+          enableHighAccuracy: true,
+          maximumAge: 10000,
+          timeout: 5000
+        }
+      );
+
+    } else {
+
+      geoErrorMsg.textContent =
+        "Browser non supportato.";
+
+      geoErrorMsg.style.display = "block";
+    }
+
+  </script>
 
 </body>
 </html>
